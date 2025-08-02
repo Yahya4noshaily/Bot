@@ -1,26 +1,18 @@
-from playwright.sync_api import sync_playwright
+from playwright.sync_api from playwright.sync_api import sync_playwright
 
-def run_browser(email, password, market="smarty", duration=30):
+def run_browser(email, password):
     with sync_playwright() as p:
-        browser = p.chromium.launch(headless=False)  # خليه يشتغل بواجهة
+        browser = p.chromium.launch(headless=True)  # ← تم التعديل هنا
         page = browser.new_page()
+
         page.goto("https://app.eobroker.com/")
+        page.fill('input[type="email"]', email)
+        page.fill('input[type="password"]', password)
+        page.click('button:has-text("تسجيل الدخول")')
 
-        page.wait_for_timeout(3000)
-
-        # تعبئة البيانات
-        page.locator('input[name="email"]').fill(email)
-        page.locator('input[name="password"]').fill(password)
-        page.locator('button[type="submit"]').click()
-
-        page.wait_for_timeout(8000)  # انتظار بعد تسجيل الدخول
-
-        # الدخول على سوق OTC المطلوب
-        page.goto(f"https://app.eobroker.com/trade/otc/{market}")
-
-        print(f"✅ تم الدخول إلى السوق: {market}، والبقاء لمدة {duration} ثانية")
-
-        # الانتظار على الشارت
-        page.wait_for_timeout(duration * 1000)
+        page.wait_for_timeout(10000)  # انتظر 10 ثواني بعد تسجيل الدخول
+        print("✅ تم تسجيل الدخول بنجاح")
+        
+        # هنا تقدر تضيف أي تحليل أو توصيات لاحقًا
 
         browser.close()
