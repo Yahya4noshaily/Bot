@@ -1,8 +1,11 @@
-from playwright.sync_api from playwright.sync_api import sync_playwright
+from playwright.sync_api import sync_playwright
 
-def run_browser(email, password):
+def run_browser():
+    email = "Nushily4@gmail.com"
+    password = "Ya12345678"
+
     with sync_playwright() as p:
-        browser = p.chromium.launch(headless=True)  # ← تم التعديل هنا
+        browser = p.chromium.launch(headless=True)  # مهم جداً لتفادي خطأ DISPLAY
         page = browser.new_page()
 
         page.goto("https://app.eobroker.com/")
@@ -12,7 +15,5 @@ def run_browser(email, password):
 
         page.wait_for_timeout(10000)  # انتظر 10 ثواني بعد تسجيل الدخول
         print("✅ تم تسجيل الدخول بنجاح")
-        
-        # هنا تقدر تضيف أي تحليل أو توصيات لاحقًا
 
         browser.close()
